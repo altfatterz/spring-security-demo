@@ -1,0 +1,18 @@
+spring:
+  security:
+    user:
+      name: admin
+      password: secret
+      roles:
+        - ADMIN
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+  endpoint:
+    health:
+      show-details: when_authorized
+      roles: 'ROLE_ADMIN'
