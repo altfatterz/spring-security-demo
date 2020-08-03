@@ -1,9 +1,11 @@
 package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
@@ -50,7 +52,13 @@ public class SecurityConfiguration {
 
     @Configuration
     @Order(2)
-    public class ActuatorSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    public static class ActuatorSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+        private SecurityProperties securityProperties;
+
+        public ActuatorSecurityConfiguration(SecurityProperties securityProperties) {
+            this.securityProperties = securityProperties;
+        }
 
         protected void configure(HttpSecurity http) throws Exception {
 
@@ -66,10 +74,15 @@ public class SecurityConfiguration {
                     .and()
                     .httpBasic()
             ;
-
             // @formatter:on
 
         }
 
+        @Override
+        public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+            authenticationManagerBuilder.inMemoryAuthentication().withUser(securityProperties.getUser().getName())
+                    .password("{noop}" + securityProperties.getUser().getPassword()).roles("ADMIN");
+
+        }
     }
 }

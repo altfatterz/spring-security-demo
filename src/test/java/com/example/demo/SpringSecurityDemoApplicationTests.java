@@ -43,7 +43,6 @@ class SpringSecurityDemoApplicationTests {
     }
 
     @Test
-    // currently fails
     public void accessActuatorEnvWithBasicAuth() throws Exception {
         mockMvc.perform(get("/actuator/env").with(httpBasic("admin", "secret"))).andExpect(status().isOk());
     }

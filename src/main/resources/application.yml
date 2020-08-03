@@ -20,3 +20,5 @@ management:
 logging:
   level:
     org.springframework.security: debug
+
+debug: true
